@@ -124,7 +124,7 @@ def main():
         handle_owner_media
     ))
 
-    app.add_handler(MessageHandler(filters.TEXT & \~filters.COMMAND, handle_password))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_password))
 
     print("Bot is running on Railway...")
     app.run_polling()
