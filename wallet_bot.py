@@ -20,7 +20,9 @@ def load_data():
 
 def save_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "👋 Wallet Bot Ready!\n\n"
         "🔒 Password போட்டா stored files கிடைக்கும்.\n"
@@ -63,7 +65,9 @@ async def handle_owner_media(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     except Exception as e:
         logger.error(e)
-        await message.reply_text(f"Error: {e}")async def handle_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await message.reply_text(f"Error: {e}")
+
+async def handle_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     if text != PASSWORD:
         return
@@ -90,7 +94,9 @@ async def handle_owner_media(update: Update, context: ContextTypes.DEFAULT_TYPE)
         except Exception as e:
             logger.error(f"Failed to send item: {e}")
 
-    await update.message.reply_text("✅ All items sent!")async def clear_storage(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("✅ All items sent!")
+
+async def clear_storage(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
     save_data({"items": []})
