@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: telegram-wallet-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python wallet_bot.py
+    plan: free
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: OWNER_ID
+        sync: false
+      - key: PASSWORD
+        sync: false
