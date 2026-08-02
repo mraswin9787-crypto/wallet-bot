@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import asyncio  # 1. asyncio சேர்க்கப்பட்டுள்ளது
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, filters, ContextTypes
 
@@ -66,6 +67,7 @@ async def handle_owner_media(update: Update, context: ContextTypes.DEFAULT_TYPE)
         logger.error(e)
         await message.reply_text(f"Error: {e}")
 
+# 2. Delay உடன் கூடிய சரியான handle_password ஃபங்ஷன்
 async def handle_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     if text != PASSWORD:
@@ -80,9 +82,9 @@ async def handle_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(f"🔓 Password correct! Sending {len(items)} items...")
 
+    count = 0
     for item in items:
         try:
-            # File ID வைத்து Telegram Cloud-ல் இருந்து நேரடியாக வீடியோ/மீடியாவை அனுப்பும்
             if item["type"] == "video":
                 await context.bot.send_video(chat_id=update.effective_chat.id, video=item["file_id"])
             elif item["type"] == "document":
@@ -91,8 +93,17 @@ async def handle_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await context.bot.send_photo(chat_id=update.effective_chat.id, photo=item["file_id"])
             elif item["type"] == "text":
                 await context.bot.send_message(chat_id=update.effective_chat.id, text=item["text"])
+            
+            count += 1
+            # Telegram Block ஆகாமல் இருக்க சிறு இடைவெளி (Delay)
+            if count % 20 == 0:
+                await asyncio.sleep(3)  # ஒவ்வொரு 20 ஃபைலுக்குப் பிறகும் 3 வினாடி வெயிட் பண்ணும்
+            else:
+                await asyncio.sleep(0.5)  # ஒவ்வொரு ஃபைலுக்கும் அரை வினாடி இடைவெளி
+
         except Exception as e:
             logger.error(f"Failed to send item: {e}")
+            await asyncio.sleep(2)
 
     await update.message.reply_text("✅ All items sent!")
 
@@ -108,6 +119,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = load_data()
     await update.message.reply_text(f"📦 Total items stored: {len(data['items'])}")
 
+# 3. தூய்மையான main() ஃபங்ஷன்
 def main():
     if not BOT_TOKEN:
         print("ERROR: BOT_TOKEN environment variable not set!")
