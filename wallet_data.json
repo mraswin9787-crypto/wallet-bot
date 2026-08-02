@@ -1,1 +1,28 @@
-
+{
+  "items": [
+    {
+      "type": "video",
+      "file_id": "BAACAgUAAxkBAA...",
+      "text": null,
+      "file_name": "video_12345.mp4"
+    },
+    {
+      "type": "photo",
+      "file_id": "AgACAgUAAxkBAA...",
+      "text": null,
+      "file_name": "photo_67890.jpg"
+    },
+    {
+      "type": "document",
+      "file_id": "BQACAgUAAxkBAA...",
+      "text": null,
+      "file_name": "my_document.pdf"
+    },
+    {
+      "type": "text",
+      "file_id": null,
+      "text": "Secret note or password",
+      "file_name": null
+    }
+  ]
+}
