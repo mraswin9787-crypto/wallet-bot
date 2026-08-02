@@ -25,9 +25,8 @@ def save_data(data):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "👋 Wallet Bot Ready!\n\n"
-        "🔒 Password போட்டா stored files கிடைக்கும்.\n"
-        "Owner மட்டும் files அனுப்ப முடியும்.\n"
-        "⚠️ Files local-ல save ஆகாது — file_id மட்டும் store ஆகும்."
+        "🔒 Password போட்டா சேமிக்கப்பட்ட மீடியாக்கள் அனுப்பப்படும்.\n"
+        "Owner மட்டும் மீடியாக்களை அனுப்ப முடியும்."
     )
 
 async def handle_owner_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -56,12 +55,12 @@ async def handle_owner_media(update: Update, context: ContextTypes.DEFAULT_TYPE)
             item["type"] = "text"
             item["text"] = message.text
         else:
-            await message.reply_text("இந்த type support இல்லை.")
+            await message.reply_text("இந்த வகை சப்போர்ட் இல்லை.")
             return
 
         data["items"].append(item)
         save_data(data)
-        await message.reply_text(f"✅ Saved (file_id only)! Total items: {len(data['items'])}")
+        await message.reply_text(f"✅ Successfully Saved! Total items: {len(data['items'])}")
 
     except Exception as e:
         logger.error(e)
@@ -83,6 +82,7 @@ async def handle_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     for item in items:
         try:
+            # File ID வைத்து Telegram Cloud-ல் இருந்து நேரடியாக வீடியோ/மீடியாவை அனுப்பும்
             if item["type"] == "video":
                 await context.bot.send_video(chat_id=update.effective_chat.id, video=item["file_id"])
             elif item["type"] == "document":
@@ -126,7 +126,7 @@ def main():
 
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_password))
 
-    print("Bot is running on Railway...")
+    print("Bot is running...")
     app.run_polling()
 
 if __name__ == "__main__":
